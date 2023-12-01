@@ -1,0 +1,49 @@
+﻿@implements IAsyncDisposable
+
+<div class="line-numbers" @ref="_elementRef">
+    @ChildContent
+</div>
+
+@code {
+
+    /// <summary>
+    /// Gets or sets the content to be rendered inside the component.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = null!;
+
+    private ElementReference _elementRef;
+
+    private IJSObjectReference? _module;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            //加载样式
+            _module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Biwen.Blazor.Components/modules.js");
+            await _module.InvokeVoidAsync("loadStyle", "_content/Biwen.Blazor.Components/prism.css");
+        }
+
+        try
+        {
+            if (_module != null)
+                await _module.InvokeVoidAsync("highlight", _elementRef, true);
+        }
+        catch
+        {
+            // ignored
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            await _module.DisposeAsync();
+        }
+    }
+}

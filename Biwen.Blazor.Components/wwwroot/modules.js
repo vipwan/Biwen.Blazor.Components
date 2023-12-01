@@ -13,5 +13,5 @@ export function loadStyle(resourceUrl) {
 }
 
 export function highlight(ele, flag, o) {
-    Prism.highlightAllUnder(ele, flag, o)
+    Prism.highlightAllUnder(ele, flag, o);
 }

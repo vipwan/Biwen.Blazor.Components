@@ -5,6 +5,13 @@
         [Parameter]
         public RenderFragment? ChildContent { get; set; }
 
+        /// <summary>
+        /// 是否显示行号,默认显示
+        /// </summary>
+        [Parameter]
+        public bool LineNumbers { get; set; } = true;
+
+
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = null!;
 

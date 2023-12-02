@@ -2,6 +2,6 @@
     <link href="./_content/Biwen.Blazor.Components/prism.css" rel="stylesheet" type="text/css" />
 </HeadContent>
 
-<div class="line-numbers" @ref="_elementRef">
-    @ChildContent
+<div class="@(LineNumbers ? "class='line-numbers":"")" @ref="_elementRef">
+   @ChildContent
 </div>

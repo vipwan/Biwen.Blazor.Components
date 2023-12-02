@@ -11,6 +11,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddFluentUIComponents();
 
+// HttpClient
+builder.Services.AddScoped(sp => new HttpClient { });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

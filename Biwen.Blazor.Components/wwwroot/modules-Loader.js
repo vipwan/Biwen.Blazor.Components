@@ -19,4 +19,4 @@ function loadScript(resourceUrl, async) {
     document.body.appendChild(wcScript);
 }
 
-export default { loadScript, loadStyle }
+export { loadScript, loadStyle }

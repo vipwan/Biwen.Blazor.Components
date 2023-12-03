@@ -21,6 +21,18 @@ namespace Biwen.Blazor.Components
         [Parameter]
         public Encoding Encoding { get; set; } = Encoding.UTF8;
 
+        /// <summary>
+        /// 是否代码高亮,默认高亮
+        /// </summary>
+        [Parameter]
+        public bool CodeHighlight { get; set; } = true;
+
+        /// <summary>
+        /// 代码高亮行号,默认显示
+        /// </summary>
+        [Parameter]
+        public bool CodeHighlightRowNumber { get; set; } = true;
+
 
         /// <summary>
         /// Gets or sets the Markdown content

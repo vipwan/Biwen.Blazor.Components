@@ -1,3 +1,10 @@
-﻿<PrismHighlighter>
+﻿@if (CodeHighlight)
+{
+    <PrismHighlighter LineNumbers="CodeHighlightRowNumber">
     @HtmlContent
-</PrismHighlighter>
+    </PrismHighlighter>
+}
+else
+{
+    @HtmlContent
+}

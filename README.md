@@ -2,8 +2,11 @@
 
 ## 语法高亮组件 PrismHighlighter
 语法高亮使用`Prism.js`，支持`C#`、`CSS`、`HTML`、`JavaScript`、`JSON`、`Markdown`、`SQL`、`TypeScript`、`YAML`等语言。
+
+- LineNumbers为true时显示行号
+
 ```razor
-<PrismHighlighter>
+<PrismHighlighter LineNumbers="true">
 <pre>
 	<code class="language-csharp">
 	private int currentCount = 0;
@@ -16,8 +19,15 @@
 </PrismHighlighter>
 ```
 
+
+
+
 ## MD显示组件 MarkdownViewer
 提供MD文件显示功能
+
+- FromAsset属性为MD文件路径，Content属性为MD内容
+- CodeHighlight=true时，会对代码进行高亮显示
+- CodeHighlightRowNumber=true && CodeHighlight=true时，会显示代码行号
 
 ### 1. 注册HttpClient服务
 ```csharp

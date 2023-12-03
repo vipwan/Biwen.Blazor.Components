@@ -18,7 +18,12 @@
         </FluentAccordionItem>
         <FluentAccordionItem Heading="使用Content">
             <h5 class="@cls">使用Content</h5>
-            <MarkdownViewer Content="@md"></MarkdownViewer>
+            @* <MarkdownViewer Content="@md"></MarkdownViewer> *@
+
+            <DynamicComponent 
+                Type="@typeof(MarkdownViewer)" 
+                Parameters="@(new Dictionary<string,object>(){{ "Content" , md } })"></DynamicComponent>
+
         </FluentAccordionItem>
     </FluentAccordion>
 

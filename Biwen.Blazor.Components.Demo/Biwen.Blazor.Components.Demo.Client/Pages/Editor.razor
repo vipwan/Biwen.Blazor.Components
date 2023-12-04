@@ -1,0 +1,34 @@
+﻿@page "/editor"
+@rendermode InteractiveAuto
+
+<PageTitle>Editor</PageTitle>
+
+<FluentGrid>
+
+    <FluentGridItem xs="12">
+
+        <MarkdownEditor @ref="editor" Content="@md"></MarkdownEditor>
+        <FluentButton @onclick="async()=>{await GetContent(); }" Appearance="Appearance.Accent">获取Content</FluentButton>
+
+    </FluentGridItem>
+
+</FluentGrid>
+
+@code {
+
+    [Inject]
+    private IToastService ToastService { get; set; } = null!;
+
+    private string md = "## Hello World";
+
+    private MarkdownEditor editor = null!;
+
+    private async Task GetContent()
+    {
+
+        var content = editor.Content;
+
+        ToastService.ShowInfo(content!);
+        await Task.CompletedTask;
+    }
+}

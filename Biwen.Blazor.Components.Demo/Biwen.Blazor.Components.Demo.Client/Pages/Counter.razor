@@ -1,35 +1,37 @@
 ﻿@page "/counter"
+
 @rendermode InteractiveAuto
 
-<PageTitle>Counter</PageTitle>
+@inject IToastService ToastService
+@inject IDialogService DialogService
 
-<h1>Counter</h1>
-
-<p role="status">Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge></p>
-
-<FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton>
+<PageTitle>Demo</PageTitle>
 
 
-<PrismHighlighter>
+<FluentGrid>
+
+    <FluentGridItem xs="12">
+
+    <p role="status">Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge></p>
+
+    <FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton>
+
+    <MarkdownViewer Content="@md"></MarkdownViewer>
+
+    <PrismHighlighter>
     <pre>
-    <code class="language-csharp">
-    private int currentCount = 0;
-    private void IncrementCount()
-    {
-    currentCount++;
-    }
-    </code>
-    </pre>
-</PrismHighlighter>
-
-@* <PrismHighlighter>
-    <pre>
-    <code class="language-csharp">
+        <code class="language-csharp">
         global using Microsoft.AspNetCore.Components;
         global using Microsoft.JSInterop;
-    </code>
+        </code>
     </pre>
-</PrismHighlighter> *@
+    </PrismHighlighter>
+
+    <FluentSpacer></FluentSpacer>
+
+    </FluentGridItem>
+
+</FluentGrid>
 
 
 @code {
@@ -38,5 +40,20 @@
     private void IncrementCount()
     {
         currentCount++;
+
+        ToastService.ShowInfo($"Current count: {currentCount}");
+    }
+
+    private string md = "## Hello World";
+
+    private MarkdownEditor editor = null!;
+
+    private async Task GetContent()
+    {
+
+        var content = editor.Content;
+
+        ToastService.ShowInfo(content!);
+        await Task.CompletedTask;
     }
 }

@@ -1,6 +1,6 @@
-﻿<HeadContent>
-    <link href="./_content/Biwen.Blazor.Components/prism.css" rel="stylesheet" type="text/css" />
-</HeadContent>
+﻿@rendermode InteractiveAuto
+
+<BiwenHeadContent />
 
 <div class="@(LineNumbers ? "line-numbers":"")" @ref="_elementRef">
    @ChildContent

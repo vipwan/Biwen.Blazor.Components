@@ -3,13 +3,16 @@
 
 <PageTitle>Editor</PageTitle>
 
+<FluentToastProvider MaxToastCount="10" />
+<FluentDialogProvider />
+<FluentTooltipProvider />
+
 <FluentGrid>
 
     <FluentGridItem xs="12">
 
         <MarkdownEditor @ref="editor" Content="@md"></MarkdownEditor>
         <FluentButton @onclick="async()=>{await GetContent(); }" Appearance="Appearance.Accent">获取Content</FluentButton>
-
     </FluentGridItem>
 
 </FluentGrid>
@@ -22,13 +25,21 @@
     private string md = "## Hello World";
 
     private MarkdownEditor editor = null!;
+    private MarkdownEditor editor2 = null!;
 
     private async Task GetContent()
     {
-
         var content = editor.Content;
-
         ToastService.ShowInfo(content!);
         await Task.CompletedTask;
     }
+
+    private async Task GetContent2()
+    {
+        var content = editor2.Content;
+        ToastService.ShowInfo(content!);
+        await Task.CompletedTask;
+    }
+
+
 }

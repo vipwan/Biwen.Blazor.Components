@@ -7,6 +7,10 @@
 
 <PageTitle>Demo</PageTitle>
 
+<FluentToastProvider MaxToastCount="10" />
+<FluentDialogProvider />
+<FluentTooltipProvider />
+
 
 <FluentGrid>
 
@@ -30,6 +34,14 @@
     <FluentSpacer></FluentSpacer>
 
     </FluentGridItem>
+
+    <FluentGridItem xs="12">
+
+        <MarkdownEditor @ref="editor" Content="@md"></MarkdownEditor>
+        <FluentButton @onclick="async()=>{await GetContent(); }" Appearance="Appearance.Accent">获取Content</FluentButton>
+
+    </FluentGridItem>
+
 
 </FluentGrid>
 

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biwen.Blazor.Components", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biwen.Blazor.Components.Demo", "Biwen.Blazor.Components.Demo\Biwen.Blazor.Components.Demo\Biwen.Blazor.Components.Demo.csproj", "{2E8B9145-5FA8-49DB-8D3D-F46A3CC9B46D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biwen.Blazor.Components.Demo.Client", "Biwen.Blazor.Components.Demo\Biwen.Blazor.Components.Demo.Client\Biwen.Blazor.Components.Demo.Client.csproj", "{6442895B-7A71-4ED3-A585-AF8C3240E8B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biwen.Blazor.Components.Demo.Shared", "Biwen.Blazor.Components.Demo\Biwen.Blazor.Components.Demo.Client\Biwen.Blazor.Components.Demo.Shared.csproj", "{6442895B-7A71-4ED3-A585-AF8C3240E8B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{1575B689-E72B-4688-A666-EA27F3985F4E}"
 EndProject

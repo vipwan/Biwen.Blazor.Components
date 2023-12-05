@@ -1,5 +1,5 @@
 using Biwen.Blazor.Components;
-using Biwen.Blazor.Components.Demo.Client.Pages;
+using Biwen.Blazor.Components.Demo.Shared.Pages;
 using Biwen.Blazor.Components.Demo.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 
@@ -32,6 +32,6 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
 
-    .AddAdditionalAssemblies(typeof(Counter).Assembly);
+    .AddAdditionalAssemblies(typeof(Doc).Assembly);
 
 app.Run();

@@ -5,8 +5,8 @@
 <nav>
     <FluentNavMenu Width="250" Collapsible="true" Title="Custom navigation menu">
         <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icon.FromImageUrl("/images/home.svg")" IconColor="Color.Accent">Home</FluentNavLink>
-        <FluentNavLink Href="counter" Icon="@Icon.FromImageUrl("/images/counter.svg")" IconColor="Color.Accent">Demo</FluentNavLink>
-        <FluentNavLink Href="editor" Icon="@Icon.FromImageUrl("/images/counter.svg")" IconColor="Color.Accent">Editor</FluentNavLink>
+        <FluentNavLink ForceLoad="true" Href="counter" Icon="@Icon.FromImageUrl("/images/counter.svg")" IconColor="Color.Accent">Demo</FluentNavLink>
+        <FluentNavLink ForceLoad="true" Href="editor" Icon="@Icon.FromImageUrl("/images/counter.svg")" IconColor="Color.Accent">Editor</FluentNavLink>
         @* <FluentNavLink Href="weather" Icon="@Icon.FromImageUrl("/images/weather.svg")" IconColor="Color.Accent">Weather</FluentNavLink> *@
         <FluentNavLink Href="doc" Icon="@Icon.FromImageUrl("/images/counter.svg")" IconColor="Color.Accent">Document</FluentNavLink>
     </FluentNavMenu>

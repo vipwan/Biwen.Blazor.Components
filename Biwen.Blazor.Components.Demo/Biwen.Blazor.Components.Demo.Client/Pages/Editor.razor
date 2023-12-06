@@ -19,7 +19,7 @@
 
     <FluentGridItem xs="12">
 
-        <CodeEditor @ref="codeEditor"></CodeEditor>
+        <CodeEditor @ref="codeEditor" Language="csharp"></CodeEditor>
         <FluentButton @onclick="async()=>{await GetCode(); }" Appearance="Appearance.Accent">获取Code</FluentButton>
 
     </FluentGridItem>

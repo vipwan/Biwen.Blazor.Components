@@ -28,10 +28,6 @@
         [Parameter]
         public EventCallback<string> ValueChanged { get; set; }
 
-
-        [Parameter(CaptureUnmatchedValues = true)]
-        public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = default!;
 

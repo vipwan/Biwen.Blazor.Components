@@ -1,7 +1,7 @@
 # Biwen.Blazor.Components
 
-## 语法高亮组件 PrismHighlighter
-语法高亮使用`Prism.js`，支持`C#`、`CSS`、`HTML`、`JavaScript`、`JSON`、`Markdown`、`SQL`、`TypeScript`、`YAML`等语言。
+## 语法高亮组件 CodeHighlighter
+语法高亮使用`Prism.js`，支持`C#`、`CSS`、`HTML`、`JavaScript`、`JSON`、`Markdown`、`TypeScript`等语言。
 
 - LineNumbers为true时显示行号
 
@@ -18,8 +18,6 @@
 </pre>
 </PrismHighlighter>
 ```
-
-
 
 
 ## MD显示组件 MarkdownViewer
@@ -52,6 +50,24 @@ builder.Services.AddScoped<HttpClient>();
     private async Task GetContent()
     {
         var content = editor.Content;
+        await Task.CompletedTask;
+    }
+```
+
+## Code编辑器 CodeEditor
+- Language 属性为编辑器语言，支持`csharp`、`css`、`html`、`javascript`、`json`、`markdown`、`typescript`等语言
+- Value 属性为编辑器初始化内容
+- Style 属性为编辑器样式
+- ShowLineNumbers是否显示行号.默认true显示
+- ValueChanged 编辑器内容改变事件
+```razor
+ <CodeEditor @ref="codeEditor" Language="csharp"></CodeEditor>
+```
+```csharp
+    private CodeEditor codeEditor = null!;
+    private async Task GetContent()
+    {
+        var content = codeEditor.Value;
         await Task.CompletedTask;
     }
 ```

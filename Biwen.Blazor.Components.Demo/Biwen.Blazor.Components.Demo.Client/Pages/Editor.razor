@@ -15,6 +15,17 @@
         <FluentButton @onclick="async()=>{await GetContent(); }" Appearance="Appearance.Accent">获取Content</FluentButton>
     </FluentGridItem>
 
+
+
+    <FluentGridItem xs="12">
+
+        <CodeEditor @ref="codeEditor"></CodeEditor>
+        <FluentButton @onclick="async()=>{await GetCode(); }" Appearance="Appearance.Accent">获取Code</FluentButton>
+
+    </FluentGridItem>
+
+
+
 </FluentGrid>
 
 @code {
@@ -26,6 +37,16 @@
 
     private MarkdownEditor editor = null!;
     private MarkdownEditor editor2 = null!;
+    private CodeEditor codeEditor = null!;
+
+
+    private async Task GetCode()
+    {
+        var content = codeEditor.Value;
+        ToastService.ShowInfo(content!);
+        await Task.CompletedTask;
+    }
+
 
     private async Task GetContent()
     {

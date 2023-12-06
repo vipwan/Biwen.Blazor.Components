@@ -1,6 +1,6 @@
 ﻿namespace Biwen.Blazor.Components
 {
-    public partial class PrismHighlighter : ComponentBase ,IAsyncDisposable
+    public partial class CodeHighlighter : ComponentBase, IAsyncDisposable
     {
         [Parameter]
         public RenderFragment? ChildContent { get; set; }

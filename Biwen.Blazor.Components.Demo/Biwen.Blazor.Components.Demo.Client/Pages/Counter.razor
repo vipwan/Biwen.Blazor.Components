@@ -16,22 +16,22 @@
 
     <FluentGridItem xs="12">
 
-    <p role="status">Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge></p>
+        <p role="status">Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge></p>
 
-    <FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton>
+        <FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton>
 
-    <MarkdownViewer Content="@md"></MarkdownViewer>
+        <MarkdownViewer Content="@md"></MarkdownViewer>
 
-    <PrismHighlighter>
-    <pre>
-        <code class="language-csharp">
+        <CodeHighlighter>
+            <pre>
+            <code class="language-csharp">
         global using Microsoft.AspNetCore.Components;
         global using Microsoft.JSInterop;
         </code>
     </pre>
-    </PrismHighlighter>
+        </CodeHighlighter>
 
-    <FluentSpacer></FluentSpacer>
+        <FluentSpacer></FluentSpacer>
 
     </FluentGridItem>
 

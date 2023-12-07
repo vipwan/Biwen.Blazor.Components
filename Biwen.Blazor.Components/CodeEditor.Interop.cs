@@ -49,6 +49,7 @@
         {
             if (Module is not null)
             {
+                await Module.InvokeVoidAsync("Dispose", id);
                 await Module.DisposeAsync();
             }
         }

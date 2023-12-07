@@ -11,10 +11,9 @@
 
     <FluentGridItem xs="12">
 
-        <MarkdownEditor @ref="editor" Content="@md"></MarkdownEditor>
+        <MarkdownEditor @ref="editor" Content="@md" UploadImage="true" UploadImagePath="/upload"></MarkdownEditor>
         <FluentButton @onclick="async()=>{await GetContent(); }" Appearance="Appearance.Accent">获取Content</FluentButton>
     </FluentGridItem>
-
 
 
     <FluentGridItem xs="12">

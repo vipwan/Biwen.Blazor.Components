@@ -111,5 +111,15 @@ function Layout(id) {
         editors[id].layout();
 }
 
+function Dispose(id) {
+    if (!editors[id])
+        return;
+    editors[id].dispose();
+    editors[id] = null;
+}
 
-export { Init, GetVal, SetVal, SetOptions, Layout };
+
+
+
+
+export { Init, GetVal, SetVal, SetOptions, Layout, Dispose };

@@ -1,6 +1,6 @@
 ﻿namespace Biwen.Blazor.Components
 {
-    public partial class CodeEditor : ComponentBase
+    public partial class CodeEditor : ComponentBase, IAsyncDisposable
     {
 
         [Parameter]
@@ -102,6 +102,9 @@
             }
         }
 
-
+        public async ValueTask DisposeAsync()
+        {
+            await Interop.DisposeAsync();
+        }
     }
 }

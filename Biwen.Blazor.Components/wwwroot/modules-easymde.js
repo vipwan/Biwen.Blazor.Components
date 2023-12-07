@@ -8,7 +8,7 @@ import './easymde/dist/easymde.min.js';
 const editors = [];
 
 const Editor = {
-    init: function (elementId) {
+    init: function (elementId, options) {
         const editor = new EasyMDE({
             element: document.getElementById(elementId),
             showIcons: ["code", "table", "upload-image"],
@@ -18,6 +18,9 @@ const Editor = {
             },
             //lineNumbers: true,
             spellChecker: false,
+            uploadImage: options.uploadImage,
+            imageUploadEndpoint: options.imageUploadEndpoint,
+            //imageUploadFunction: options.imageUploadFunction,
         });
 
         editors[elementId] = editor;

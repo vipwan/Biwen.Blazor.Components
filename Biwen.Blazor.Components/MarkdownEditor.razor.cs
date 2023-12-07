@@ -11,13 +11,34 @@
         {
             _timer = new Timer(async (state) =>
             {
-                await GetContent();
+                try
+                {
+                    await GetContent();
+                }
+                catch
+                {
+                    // todo:
+                }
             }, new AutoResetEvent(false), 3000, 600);
 
             return Task.CompletedTask;
         }
 
         protected string? _content;
+
+        /// <summary>
+        /// 是否支持上传图片,默认不支持
+        /// </summary>
+        [Parameter]
+        public bool UploadImage { get; set; } = false;
+
+        [Parameter]
+        public string? UploadImagePath { get; set; } = default!;
+
+
+
+
+
 
         [Parameter]
         public string? Content
@@ -70,10 +91,18 @@
         {
             if (firstRender)
             {
+                var options = new
+                {
+                    uploadImage = UploadImage,
+                    imageUploadEndpoint = UploadImagePath,
+                    //imageUploadFunction= 
+                };
+
                 Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Biwen.Blazor.Components/modules-easymde.js");
-                await Module.InvokeVoidAsync("Editor.init", Id);
+                await Module.InvokeVoidAsync("Editor.init", Id, options);
             }
         }
+
 
         public async ValueTask DisposeAsync()
         {

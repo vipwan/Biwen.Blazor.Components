@@ -1,7 +1,8 @@
 ﻿/// <reference path="./easymde/types/easymde.d.ts" />
 
-//ES6 规范：export default 和 import 配对
-//CommonJS 规范：module.exports 和 require 配对
+//doc:
+//https://github.com/Ionaru/easy-markdown-editor#options-example
+
 
 import './easymde/dist/easymde.min.js';
 

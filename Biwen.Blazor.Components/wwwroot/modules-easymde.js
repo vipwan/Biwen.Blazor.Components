@@ -21,7 +21,8 @@ const Editor = {
             uploadImage: options.uploadImage,
             imageUploadEndpoint: options.imageUploadEndpoint,
             imageMaxSize: options.imageMaxSize,
-            imageAccept: options.imageAccept
+            imageAccept: options.imageAccept,
+            imagePathAbsolute: true,//使用绝对路径
             //imageUploadFunction: options.imageUploadFunction,
         });
 

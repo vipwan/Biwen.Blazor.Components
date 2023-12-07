@@ -35,8 +35,17 @@
         [Parameter]
         public string? UploadImagePath { get; set; } = default!;
 
+        /// <summary>
+        /// 默认2048. 单位为kb,2048表示2M
+        /// </summary>
+        [Parameter]
+        public int ImageMaxSize { get; set; } = 2048;
 
-
+        /// <summary>
+        /// 接受的上传文件格式默认 image/png,image/jpeg,使用半角逗号隔开
+        /// </summary>
+        [Parameter]
+        public string ImageAccept { get; set; } = "image/png,image/jpeg";
 
 
 
@@ -95,6 +104,8 @@
                 {
                     uploadImage = UploadImage,
                     imageUploadEndpoint = UploadImagePath,
+                    imageMaxSize = ImageMaxSize * 1024,
+                    imageAccept = ImageAccept,
                     //imageUploadFunction= 
                 };
 

@@ -20,6 +20,8 @@ const Editor = {
             spellChecker: false,
             uploadImage: options.uploadImage,
             imageUploadEndpoint: options.imageUploadEndpoint,
+            imageMaxSize: options.imageMaxSize,
+            imageAccept: options.imageAccept
             //imageUploadFunction: options.imageUploadFunction,
         });
 

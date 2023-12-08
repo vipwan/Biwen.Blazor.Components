@@ -1,6 +1,6 @@
 ﻿namespace Biwen.Blazor.Components
 {
-    internal class CodeEditorInterop(IJSRuntime jSRuntime, string id) : IAsyncDisposable
+    internal class CodeEditorInterop(IJSRuntime jSRuntime, string domId) : IAsyncDisposable
     {
         /// <summary>
         /// JSRuntime
@@ -9,7 +9,7 @@
         /// <summary>
         /// Id
         /// </summary>
-        private readonly string Id = id;
+        private readonly string Id = domId;
 
         private IJSObjectReference Module = null!;
 
@@ -49,7 +49,7 @@
         {
             if (Module is not null)
             {
-                await Module.InvokeVoidAsync("Dispose", id);
+                await Module.InvokeVoidAsync("Dispose", Id);
                 await Module.DisposeAsync();
             }
         }

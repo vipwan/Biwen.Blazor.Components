@@ -40,9 +40,10 @@ builder.Services.AddScoped<HttpClient>();
 
 ## MD编辑器 MarkdownEditor
 - Content属性为MD初始化内容
+- UploadImage=true表示支持上传图片,需要同时设置`UploadImagePath`(上传地址),`ImageMaxSize`(文件大小单位kb,默认2048=2M),`ImageAccept`(支持上传类型,默认`image/png,image/jpeg`)
 
 ```razor
-<MarkdownEditor @ref="editor" Content="@md"></MarkdownEditor>
+<MarkdownEditor @ref="editor" Content="@md" UploadImage="true" UploadImagePath="/upload"></MarkdownEditor>
 ```
 ```csharp
     private string md = "## Hello World";
@@ -52,6 +53,40 @@ builder.Services.AddScoped<HttpClient>();
         var content = editor.Content;
         await Task.CompletedTask;
     }
+```
+如果`UploadImage`=true还需要提供上传地址,以下是模拟一个上传接口:
+```csharp
+
+app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollection files) =>
+{
+    //当前没有防伪标记,需要自行处理,需要自行解决权限和安全问题
+    //不支持批量.只支持一次上传一个文件
+
+    //上传文件逻辑:
+    if (files.Count == 0)
+    {
+        return Results.Json(new { error = "400" });
+    }
+
+    var wwwroot = env.WebRootPath;
+    var file = files[0];
+    var ext = Path.GetExtension(file.FileName);
+    string fileName = $"{Guid.NewGuid()}{ext}";
+    //如果需要日期目录,请自行处理
+    var filePath = Path.Combine(wwwroot, "uploads", fileName);
+    using var stream = new FileStream(filePath, FileMode.CreateNew);
+    file.CopyTo(stream);
+
+    return Results.Json(new
+    {
+        data = new
+        {
+            //请注意需要使用绝对地址,远程路径格式比如:http://localhost:5000/uploads/xxx.png
+            filePath = $"/uploads/{fileName}"
+        }
+    });
+}).DisableAntiforgery();
+
 ```
 
 ## Code编辑器 CodeEditor

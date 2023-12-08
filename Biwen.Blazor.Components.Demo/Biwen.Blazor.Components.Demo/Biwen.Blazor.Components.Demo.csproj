@@ -13,4 +13,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.1.1" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="wwwroot\uploads\" />
+	</ItemGroup>
 </Project>

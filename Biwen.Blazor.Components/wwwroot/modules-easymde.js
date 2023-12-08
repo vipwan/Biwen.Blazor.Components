@@ -9,10 +9,18 @@ import './easymde/dist/easymde.min.js';
 const editors = [];
 
 const Editor = {
+
+    icons: ["code", "table"],
+
     init: function (elementId, options) {
+
+        if (options.uploadImage) {
+            this.icons.push("upload-image");
+        }
+
         const editor = new EasyMDE({
             element: document.getElementById(elementId),
-            showIcons: ["code", "table", "upload-image"],
+            showIcons: this.icons,
             autosave: {
                 //enabled: true,
                 //uniqueId: elementId,

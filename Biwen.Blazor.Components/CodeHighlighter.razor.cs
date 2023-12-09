@@ -2,7 +2,7 @@
 {
     public partial class CodeHighlighter : ComponentBase, IAsyncDisposable
     {
-        [Parameter]
+        [Parameter,EditorRequired]
         public RenderFragment? ChildContent { get; set; }
 
         /// <summary>

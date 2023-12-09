@@ -1,9 +1,9 @@
-# Biwen.Blazor.Components
+ï»¿# Biwen.Blazor.Components
 
-## Óï·¨¸ßÁÁ×é¼ş CodeHighlighter
-Óï·¨¸ßÁÁÊ¹ÓÃ`Prism.js`£¬Ö§³Ö`C#`¡¢`CSS`¡¢`HTML`¡¢`JavaScript`¡¢`JSON`¡¢`Markdown`¡¢`TypeScript`µÈÓïÑÔ¡£
+## è¯­æ³•é«˜äº®ç»„ä»¶ CodeHighlighter
+è¯­æ³•é«˜äº®ä½¿ç”¨`Prism.js`ï¼Œæ”¯æŒ`C#`ã€`CSS`ã€`HTML`ã€`JavaScript`ã€`JSON`ã€`Markdown`ã€`TypeScript`ç­‰è¯­è¨€ã€‚
 
-- LineNumbersÎªtrueÊ±ÏÔÊ¾ĞĞºÅ
+- LineNumbersä¸ºtrueæ—¶æ˜¾ç¤ºè¡Œå·
 
 ```razor
 <PrismHighlighter LineNumbers="true">
@@ -20,29 +20,30 @@
 ```
 
 
-## MDÏÔÊ¾×é¼ş MarkdownViewer
-Ìá¹©MDÎÄ¼şÏÔÊ¾¹¦ÄÜ
+## MDæ˜¾ç¤ºç»„ä»¶ MarkdownViewer
+æä¾›MDæ–‡ä»¶æ˜¾ç¤ºåŠŸèƒ½
 
-- FromAssetÊôĞÔÎªMDÎÄ¼şÂ·¾¶£¬ContentÊôĞÔÎªMDÄÚÈİ
-- CodeHighlight=trueÊ±£¬»á¶Ô´úÂë½øĞĞ¸ßÁÁÏÔÊ¾
-- CodeHighlightRowNumber=true && CodeHighlight=trueÊ±£¬»áÏÔÊ¾´úÂëĞĞºÅ
+- FromAssetå±æ€§ä¸ºMDæ–‡ä»¶è·¯å¾„ï¼ŒContentå±æ€§ä¸ºMDå†…å®¹
+- CodeHighlight=trueæ—¶ï¼Œä¼šå¯¹ä»£ç è¿›è¡Œé«˜äº®æ˜¾ç¤º
+- CodeHighlightRowNumber=true && CodeHighlight=trueæ—¶ï¼Œä¼šæ˜¾ç¤ºä»£ç è¡Œå·
 
-### 1. ×¢²áHttpClient·şÎñ
+### 1. æ³¨å†ŒHttpClientæœåŠ¡
 ```csharp
-//Çë×¢ÒâÈç¹ûÊÇBlazor WebAssemblyÏîÄ¿£¬ĞèÒª×ÔĞĞ½â¾ö¿çÓòÎÊÌâ
+//è¯·æ³¨æ„å¦‚æœæ˜¯Blazor WebAssemblyé¡¹ç›®ï¼Œéœ€è¦è‡ªè¡Œè§£å†³è·¨åŸŸé—®é¢˜
 builder.Services.AddScoped<HttpClient>();
 ```
-### 2. Ê¹ÓÃMarkdownViewer×é¼ş
+### 2. ä½¿ç”¨MarkdownViewerç»„ä»¶
 ```razor
 <MarkdownViewer FromAsset="/master/README.md" />
-<MarkdownViewer Content="* Ò²¿ÉÒÔÕâÑù´«µİMD" />
+<MarkdownViewer Content="* ä¹Ÿå¯ä»¥è¿™æ ·ä¼ é€’MD" />
 ```
 
-## MD±à¼­Æ÷ MarkdownEditor
-- ContentÊôĞÔÎªMD³õÊ¼»¯ÄÚÈİ
+## MDç¼–è¾‘å™¨ MarkdownEditor
+- Contentå±æ€§ä¸ºMDåˆå§‹åŒ–å†…å®¹
+- UploadImage=trueè¡¨ç¤ºæ”¯æŒä¸Šä¼ å›¾ç‰‡,éœ€è¦åŒæ—¶è®¾ç½®`UploadImagePath`(ä¸Šä¼ åœ°å€),`ImageMaxSize`(æ–‡ä»¶å¤§å°å•ä½kb,é»˜è®¤2048=2M),`ImageAccept`(æ”¯æŒä¸Šä¼ ç±»å‹,é»˜è®¤`image/png,image/jpeg`)
 
 ```razor
-<MarkdownEditor @ref="editor" Content="@md"></MarkdownEditor>
+<MarkdownEditor @ref="editor" Content="@md" UploadImage="true" UploadImagePath="/upload"></MarkdownEditor>
 ```
 ```csharp
     private string md = "## Hello World";
@@ -53,13 +54,47 @@ builder.Services.AddScoped<HttpClient>();
         await Task.CompletedTask;
     }
 ```
+å¦‚æœ`UploadImage`=trueè¿˜éœ€è¦æä¾›ä¸Šä¼ åœ°å€,ä»¥ä¸‹æ˜¯æ¨¡æ‹Ÿä¸€ä¸ªä¸Šä¼ æ¥å£:
+```csharp
 
-## Code±à¼­Æ÷ CodeEditor
-- Language ÊôĞÔÎª±à¼­Æ÷ÓïÑÔ£¬Ö§³Ö`csharp`¡¢`css`¡¢`html`¡¢`javascript`¡¢`json`¡¢`markdown`¡¢`typescript`µÈÓïÑÔ
-- Value ÊôĞÔÎª±à¼­Æ÷³õÊ¼»¯ÄÚÈİ
-- Style ÊôĞÔÎª±à¼­Æ÷ÑùÊ½
-- ShowLineNumbersÊÇ·ñÏÔÊ¾ĞĞºÅ.Ä¬ÈÏtrueÏÔÊ¾
-- ValueChanged ±à¼­Æ÷ÄÚÈİ¸Ä±äÊÂ¼ş
+app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollection files) =>
+{
+    //å½“å‰æ²¡æœ‰é˜²ä¼ªæ ‡è®°,éœ€è¦è‡ªè¡Œå¤„ç†,éœ€è¦è‡ªè¡Œè§£å†³æƒé™å’Œå®‰å…¨é—®é¢˜
+    //ä¸æ”¯æŒæ‰¹é‡.åªæ”¯æŒä¸€æ¬¡ä¸Šä¼ ä¸€ä¸ªæ–‡ä»¶
+
+    //ä¸Šä¼ æ–‡ä»¶é€»è¾‘:
+    if (files.Count == 0)
+    {
+        return Results.Json(new { error = "400" });
+    }
+
+    var wwwroot = env.WebRootPath;
+    var file = files[0];
+    var ext = Path.GetExtension(file.FileName);
+    string fileName = $"{Guid.NewGuid()}{ext}";
+    //å¦‚æœéœ€è¦æ—¥æœŸç›®å½•,è¯·è‡ªè¡Œå¤„ç†
+    var filePath = Path.Combine(wwwroot, "uploads", fileName);
+    using var stream = new FileStream(filePath, FileMode.CreateNew);
+    file.CopyTo(stream);
+
+    return Results.Json(new
+    {
+        data = new
+        {
+            //è¯·æ³¨æ„éœ€è¦ä½¿ç”¨ç»å¯¹åœ°å€,è¿œç¨‹è·¯å¾„æ ¼å¼æ¯”å¦‚:http://localhost:5000/uploads/xxx.png
+            filePath = $"/uploads/{fileName}"
+        }
+    });
+}).DisableAntiforgery();
+
+```
+
+## Codeç¼–è¾‘å™¨ CodeEditor
+- Language å±æ€§ä¸ºç¼–è¾‘å™¨è¯­è¨€ï¼Œæ”¯æŒ`csharp`ã€`css`ã€`html`ã€`javascript`ã€`json`ã€`markdown`ã€`typescript`ç­‰è¯­è¨€
+- Value å±æ€§ä¸ºç¼–è¾‘å™¨åˆå§‹åŒ–å†…å®¹
+- Style å±æ€§ä¸ºç¼–è¾‘å™¨æ ·å¼
+- ShowLineNumbersæ˜¯å¦æ˜¾ç¤ºè¡Œå·.é»˜è®¤trueæ˜¾ç¤º
+- ValueChanged ç¼–è¾‘å™¨å†…å®¹æ”¹å˜äº‹ä»¶
 ```razor
  <CodeEditor @ref="codeEditor" Language="csharp"></CodeEditor>
 ```

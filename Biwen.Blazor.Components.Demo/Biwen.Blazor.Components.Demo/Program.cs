@@ -66,6 +66,15 @@ app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollect
     var file = files[0];
     var ext = Path.GetExtension(file.FileName);
     string fileName = $"{Guid.NewGuid()}{ext}";
+
+    #region 如果文件夹不存在.创建文件夹
+    var dir = Path.Combine(wwwroot, "uploads");
+    if (!Directory.Exists(dir))
+    {
+        Directory.CreateDirectory(dir);
+    }
+    #endregion
+
     //如果需要日期目录,请自行处理
     var filePath = Path.Combine(wwwroot, "uploads", fileName);
     using var stream = new FileStream(filePath, FileMode.CreateNew);

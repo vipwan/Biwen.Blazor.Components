@@ -18,6 +18,13 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddIntera
 
 builder.Services.AddFluentUIComponents();
 
+// SignalR
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = 1024 * 1024;
+});
+
+
 // HttpClient
 builder.Services.AddHttpClient();
 

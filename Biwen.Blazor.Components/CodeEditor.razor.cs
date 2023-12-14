@@ -40,7 +40,7 @@
             await Task.CompletedTask;
         }
 
-        private static readonly string Id = $"codeEditor{Random.Shared.NextInt64()}";
+        protected readonly string Id = $"codeEditor{Random.Shared.NextInt64()}";
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

@@ -1,0 +1,23 @@
+﻿<p>@_current</p>
+
+<button style="color:hotpink" @onclick="IncrementCount">Add</button>
+
+
+@code {
+    private int _current;
+
+    private void IncrementCount()
+    {
+        ++_current;
+    }
+
+    [Parameter, EditorRequired]
+    public int InitialCount { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        _current = InitialCount;
+    }
+
+}

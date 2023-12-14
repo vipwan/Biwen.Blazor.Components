@@ -232,6 +232,13 @@
         "min/vs/language/typescript/tsWorker.js",
         "min/vs/language/typescript/tsWorker.min.js"
       ]
+    },
+    {
+      "library": "qrcode-generator@1.4.4",
+      "destination": "wwwroot/qrcode/",
+      "files": [
+        "qrcode.min.js"
+      ]
     }
   ]
 }

@@ -1,7 +1,11 @@
-﻿@page "/"
+﻿@rendermode InteractiveServer
+
+@page "/"
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new Fluent Blazor app.
+
+<QRCode Content="hello biwen" Level="@QRCodeLevel.H" TypeNumber="4" CellSize="5"></QRCode>

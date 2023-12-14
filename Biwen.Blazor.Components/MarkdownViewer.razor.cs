@@ -82,9 +82,16 @@ namespace Biwen.Blazor.Components
         {
             if (string.IsNullOrEmpty(InternalContent) && !string.IsNullOrEmpty(FromAsset))
             {
-                var url = $"{NavigationManager.BaseUri}{FromAsset}";
-                var bytes = await HttpClient.GetByteArrayAsync(url);
-                InternalContent = Encoding.GetString(bytes);
+                try
+                {
+                    var url = $"{NavigationManager.BaseUri}{FromAsset}";
+                    var bytes = await HttpClient.GetByteArrayAsync(url);
+                    InternalContent = Encoding.GetString(bytes);
+                }
+                catch
+                {
+                    // todo:
+                }
             }
 
             if (_raiseContentConverted)

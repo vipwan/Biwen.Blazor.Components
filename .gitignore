@@ -16,6 +16,9 @@
 # Mono auto generated files
 mono_crash.*
 
+# Biwen.Blazor.Components.ReactApp
+Biwen.Blazor.Components.ReactApp/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

@@ -10,9 +10,23 @@
 
         <FluentAccordionItem Heading="QRCode" Expanded="true">
             <h5 class="@cls">二维码生成</h5>
-            <QRCode Content="hello biwen" Level="@QRCodeLevel.H" TypeNumber="4" CellSize="5"></QRCode>
-        </FluentAccordionItem>
+            <FluentGrid Spacing="3">
+                <FluentGridItem xs="6" sm="3">
+                    <div class="card">
+                        <QRCode Content="https://github.com/vipwan/Biwen.Blazor.Components" Level="@QRCodeLevel.M" TypeNumber="4" CellSize="5"></QRCode>
+                    </div>
+                </FluentGridItem>
+                <FluentGridItem xs="6" sm="3">
+                    <div class="card">
+                        <QRCode Content="hello biwen" Level="@QRCodeLevel.H" TypeNumber="4" CellSize="4"></QRCode>
+                    </div>
+                </FluentGridItem>
+            </FluentGrid>
 
+            <MarkdownViewer Content="@qrcodeMd"></MarkdownViewer>
+
+
+        </FluentAccordionItem>
 
         <FluentAccordionItem Heading="CodeHighlighter" Expanded="true">
             <h5 class="@cls">代码高亮组件</h5>
@@ -37,7 +51,7 @@
             @* <MarkdownViewer Content="@md"></MarkdownViewer> *@
 
             <DynamicComponent Type="@typeof(MarkdownViewer)"
-                              Parameters="@(new Dictionary<string,object>(){{ "Content" , md } })"></DynamicComponent>
+                              Parameters="@(new Dictionary<string,object>(){{ "Content" , mdTest } })"></DynamicComponent>
 
         </FluentAccordionItem>
     </FluentAccordion>
@@ -46,7 +60,7 @@
 
 @code {
 
-    string md = $@"
+    string mdTest = $@"
 * Biwen.Blazor.Components
 * Biwen.Blazor.Components.Demo
 * Biwen.Blazor.Components.Demo.Client
@@ -55,4 +69,16 @@
 ";
 
     string? cls => new CssBuilder().AddClass("color").Build();
+
+    string qrcodeMd = $@"
+## QRCode
+- Content 属性为二维码内容
+- Level 属性为二维码清晰度，支持`L`、`M`、`Q`、`H`四个级别 默认M
+- TypeNumber 属性为二维码容错级别，支持1-40，数字越大，二维码容错率越高 默认4
+- CellSize 属性为二维码单元格大小，数字越大，二维码越大 默认4 ≈ 164px, 5 ≈ 205px
+
+```razor
+<QRCode Content='hello world' Level='QRCodeLevel.H' TypeNumber='4' CellSize='5'></QRCode>
+```
+";
 }

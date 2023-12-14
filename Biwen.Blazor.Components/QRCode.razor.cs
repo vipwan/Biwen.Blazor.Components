@@ -13,11 +13,11 @@ namespace Biwen.Blazor.Components
     public enum QRCodeLevel
     {
         L,
-        M,
-        Q,
         /// <summary>
         /// Default
         /// </summary>
+        M,
+        Q,
         H
     }
 
@@ -27,6 +27,9 @@ namespace Biwen.Blazor.Components
 
         protected readonly string Id = $"qrcode{Random.Shared.NextInt64()}";
 
+        /// <summary>
+        /// 当前长度不能超过36个字符
+        /// </summary>
         [Parameter, EditorRequired]
         public string Content { get; set; } = null!;
 

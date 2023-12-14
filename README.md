@@ -109,7 +109,7 @@ app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollect
 
 ## 二维码生成器 QRCode
 - Content 属性为二维码内容
-- Level 属性为二维码清晰度，支持`L`、`M`、`Q`、`H`四个级别 默认H
+- Level 属性为二维码清晰度，支持`L`、`M`、`Q`、`H`四个级别 默认M
 - TypeNumber 属性为二维码容错级别，支持1-40，数字越大，二维码容错率越高 默认4
 - CellSize 属性为二维码单元格大小，数字越大，二维码越大 默认4 ≈ 164px, 5 ≈ 205px
 

@@ -40,86 +40,79 @@ const LoadScript = content => {
     })
 }
 
-const editors = [];
-
 var loaderjsLoaded = false;
 
-async function Init(id, interop, options) {
+const Monaco = {
 
-    if (!loaderjsLoaded) {
+    _monaco: null,
+
+    Init: async function Init(id, interop, options) {
+
         await LoadScript('_content/Biwen.Blazor.Components/monaco-editor/min/vs/loader.js');
         require.config({ paths: { vs: './_content/Biwen.Blazor.Components/monaco-editor/min/vs' } });
-        loaderjsLoaded = true;
-    }
 
-    require(['vs/editor/editor.main'], function () {
+        require(['vs/editor/editor.main'], function () {
 
-        let container = document.getElementById(id);
-        const editor = monaco.editor.create(container, {
-            ariaLabel: 'Code Editor',
-            value: options.value,
+            let container = document.getElementById(id);
+            const editor = monaco.editor.create(container, {
+                ariaLabel: 'Code Editor',
+                value: options.value,
+                language: options.language,
+                theme: options.theme,
+                automaticLayout: true,
+                readOnly: options.readOnly,
+                minimap: {
+                    enabled: false
+                },
+            });
+
+            monaco.editor.setModelLanguage(monaco.editor.getModels()[0], options.language);
+            editor.onDidChangeModelContent(function (e) {
+                interop.invokeMethodAsync('UpdateValueAsync', editor.getValue());
+            });
+
+            this._monaco = editor;
+            this._monaco.layout();
+            interop.invokeMethodAsync('OnEditorLoad');
+
+        });
+    },
+
+    SetOptions: function (options) {
+
+        this._monaco.setValue(options.value);
+        this._monaco.updateOptions({
             language: options.language,
-            theme: options.theme,
-            automaticLayout: true,
-            readOnly: options.readOnly,
-            minimap: {
-                enabled: false
-            },
+            theme: options.theme
         });
 
         monaco.editor.setModelLanguage(monaco.editor.getModels()[0], options.language);
-        editor.onDidChangeModelContent(function (e) {
-            interop.invokeMethodAsync('UpdateValueAsync', editor.getValue());
-        });
+    },
 
-        editor.layout();
+    GetVal: function () {
+        return this._monaco.getValue();
+    },
 
-        editors[id] = editor;
+    SetVal: function (val) {
+        this._monaco.setValue(val);
+    },
 
-        interop.invokeMethodAsync('OnEditorLoad');
+    Layout: function () {
+        this._monaco.layout();
 
-    });
-}
+    },
 
-function SetOptions(id, options) {
-
-    if (!editors[id])
-        return;
-
-    editors[id].setValue(options.value);
-
-    editors[id].updateOptions({
-        language: options.language,
-        theme: options.theme
-    });
-
-    monaco.editor.setModelLanguage(monaco.editor.getModels()[0], options.language);
-}
-function GetVal(id) {
-    if (!editors[id])
-        return '';
-    return editors[id].getValue();
-}
-function SetVal(id, val) {
-    if (!editors[id])
-        return;
-    editors[id].setValue(val);
-}
-
-function Layout(id) {
-    if (!editors[id])
-        editors[id].layout();
-}
-
-function Dispose(id) {
-    if (!editors[id])
-        return;
-    editors[id].dispose();
-    editors[id] = null;
-}
+    Dispose: function () {
+        if (this._monaco) {
+            this._monaco.dispose();
+            this._monaco = null;
+        }
+    }
+};
 
 
 
 
 
-export { Init, GetVal, SetVal, SetOptions, Layout, Dispose };
+
+export { Monaco };

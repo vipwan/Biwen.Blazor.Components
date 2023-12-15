@@ -3,24 +3,27 @@
 //doc:
 //https://github.com/Ionaru/easy-markdown-editor#options-example
 
-
 import './easymde/dist/easymde.min.js';
 
-const editors = [];
 
 const Editor = {
 
-    icons: ["code", "table"],
 
-    init: function (elementId, options) {
+    icons: ["code", "link", "table"],
 
+    _editor: null,
+    // 初始化
+    Init: function (elementId, options) {
+
+        // 使用拖拽上传图片.
         if (options.uploadImage) {
             this.icons.push("upload-image");
         }
 
-        const editor = new EasyMDE({
+        let editor = new EasyMDE({
             element: document.getElementById(elementId),
             showIcons: this.icons,
+            hideIcons: ["guide"],
             autosave: {
                 //enabled: true,
                 //uniqueId: elementId,
@@ -31,19 +34,26 @@ const Editor = {
             imageUploadEndpoint: options.imageUploadEndpoint,
             imageMaxSize: options.imageMaxSize,
             imageAccept: options.imageAccept,
+            promptURLs: true,
             imagePathAbsolute: true,//使用绝对路径
             //imageUploadFunction: options.imageUploadFunction,
         });
 
-        editors[elementId] = editor;
+        this._editor = editor;
+    },
+    // 获取值
+    GetVal: function () {
+        return this._editor.value();
+    },
+    // 设置值
+    SetVal: function (val) {
+        this._editor.value(val);
+    },
+    // 释放内存
+    Dispose: function () {
+        this._editor.cleanup();
+        this._editor = null;
     }
 }
 
-function GetVal(elementId) {
-    return editors[elementId].value();
-}
-function SetVal(elementId, val) {
-    editors[elementId].value(val);
-}
-
-export { Editor, GetVal, SetVal };
+export { Editor };

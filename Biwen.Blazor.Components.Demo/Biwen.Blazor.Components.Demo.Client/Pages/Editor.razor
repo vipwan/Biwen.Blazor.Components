@@ -18,6 +18,14 @@
 
     <FluentGridItem xs="12">
 
+        <MarkdownEditor @ref="editor2" Content="@md" UploadImage="true" UploadImagePath="/upload"></MarkdownEditor>
+        <FluentButton @onclick="async()=>{await GetContent2(); }" Appearance="Appearance.Accent">获取Content2</FluentButton>
+    </FluentGridItem>
+
+
+
+    <FluentGridItem xs="12">
+
         <CodeEditor @ref="codeEditor" Language="csharp"></CodeEditor>
         <FluentButton @onclick="async()=>{await GetCode(); }" Appearance="Appearance.Accent">获取Code</FluentButton>
 
@@ -32,7 +40,7 @@
     [Inject]
     private IToastService ToastService { get; set; } = null!;
 
-    private string md = "## Hello World";
+    private string md = "#### Hello World";
 
     private MarkdownEditor editor = null!;
     private MarkdownEditor editor2 = null!;
@@ -46,19 +54,16 @@
         await Task.CompletedTask;
     }
 
-
     private async Task GetContent()
     {
-        var content = editor.Content;
+        var content = await editor.GetContent();
         ToastService.ShowInfo(content!);
-        await Task.CompletedTask;
     }
 
     private async Task GetContent2()
     {
-        var content = editor2.Content;
+        var content = await editor2.GetContent();
         ToastService.ShowInfo(content!);
-        await Task.CompletedTask;
     }
 
 

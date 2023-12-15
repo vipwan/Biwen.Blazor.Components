@@ -56,16 +56,13 @@
         ToastService.ShowInfo($"Current count: {currentCount}");
     }
 
-    private string md = "## Hello World";
+    private string md = "#### Hello World";
 
     private MarkdownEditor editor = null!;
 
     private async Task GetContent()
     {
-
-        var content = editor.Content;
-
+        var content = await editor.GetContent();
         ToastService.ShowInfo(content!);
-        await Task.CompletedTask;
     }
 }

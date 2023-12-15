@@ -4,12 +4,27 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Hello, Biwen.Blazor.Components!</h1>
 
-Welcome to your new Fluent Blazor app.
+<a href="https://github.com/vipwan/Biwen.Blazor.Components">For more infomations redirect to githubs</a>
 
+<FluentGrid>
 
+    <FluentGridItem xs="12" sm="6">
+        <div class="card">
+            <QRCode Content="hello biwen" Level="@QRCodeLevel.H" TypeNumber="4" CellSize="5">
+                <FluentProgressRing></FluentProgressRing>
+            </QRCode>
+        </div>
+    </FluentGridItem>
 
+    <FluentGridItem xs="12" sm="6">
+        <div class="card">
+            <QRCode Content="https://github.com/vipwan/Biwen.Blazor.Components" Level="@QRCodeLevel.M" TypeNumber="4" CellSize="5">
+                loading...
+            </QRCode>
+        </div>
+    </FluentGridItem>
 
+</FluentGrid>
 
-<QRCode Content="hello biwen" Level="@QRCodeLevel.H" TypeNumber="4" CellSize="5"></QRCode>

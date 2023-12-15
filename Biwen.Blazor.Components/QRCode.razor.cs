@@ -52,6 +52,10 @@ namespace Biwen.Blazor.Components
         public QRCodeLevel Level { get; set; } = QRCodeLevel.H;
 
 
+        [Parameter]
+        public RenderFragment? ChildContent { get; set; }
+
+
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = null!;
 

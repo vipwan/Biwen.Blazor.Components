@@ -28,7 +28,7 @@ namespace Biwen.Blazor.Components
         protected readonly string Id = $"qrcode{Random.Shared.NextInt64()}";
 
         /// <summary>
-        /// 当前长度不能超过36个字符
+        /// Content
         /// </summary>
         [Parameter, EditorRequired]
         public string Content { get; set; } = null!;
@@ -49,7 +49,7 @@ namespace Biwen.Blazor.Components
         /// Level ('L', 'M', 'Q', 'H')
         /// </summary>
         [Parameter]
-        public QRCodeLevel Level { get; set; } = QRCodeLevel.H;
+        public QRCodeLevel Level { get; set; } = QRCodeLevel.M;
 
 
         [Parameter]

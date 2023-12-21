@@ -65,7 +65,7 @@ namespace Biwen.Blazor.Components
         {
             if (firstRender)
             {
-                _module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
                "import",
                "./_content/Biwen.Blazor.Components/modules-qrcode.js");
             }

@@ -18,7 +18,7 @@
 
         public async Task Init(object interop, object options)
         {
-            Module = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Biwen.Blazor.Components/modules-monaco-editor.js");
+            Module ??= await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Biwen.Blazor.Components/modules-monaco-editor.js");
 
             await Module.InvokeVoidAsync("Monaco.Init", Id, interop, options);
             // 初始化完成

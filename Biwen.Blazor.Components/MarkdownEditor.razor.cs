@@ -72,7 +72,7 @@ namespace Biwen.Blazor.Components
                     //imageUploadFunction= 
                 };
 
-                Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Biwen.Blazor.Components/modules-easymde.js");
+                Module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Biwen.Blazor.Components/modules-easymde.js");
                 await Module.InvokeVoidAsync("Editor.Init", Id, options);
             }
         }

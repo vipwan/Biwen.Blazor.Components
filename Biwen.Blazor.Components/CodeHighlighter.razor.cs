@@ -2,7 +2,7 @@
 {
     public partial class CodeHighlighter : ComponentBase, IAsyncDisposable
     {
-        [Parameter,EditorRequired]
+        [Parameter, EditorRequired]
         public RenderFragment? ChildContent { get; set; }
 
         /// <summary>
@@ -23,7 +23,7 @@
         {
             if (firstRender)
             {
-                _module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
                     "import",
                     "./_content/Biwen.Blazor.Components/modules-PrismHighlighter.js");
             }

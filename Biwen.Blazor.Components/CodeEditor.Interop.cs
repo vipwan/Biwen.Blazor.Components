@@ -49,11 +49,16 @@
         {
             if (Module is not null)
             {
-                await Module.InvokeVoidAsync("Monaco.Dispose");
-                await Module.DisposeAsync();
+                try
+                {
+                    await Module.InvokeVoidAsync("Monaco.Dispose");
+                    await Module.DisposeAsync();
+                }
+                catch
+                {
+                    // todo:
+                }
             }
         }
     }
-
-
 }

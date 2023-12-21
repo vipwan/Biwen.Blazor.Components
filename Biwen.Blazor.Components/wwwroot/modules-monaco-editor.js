@@ -40,15 +40,15 @@ const LoadScript = content => {
     })
 }
 
-var loaderjsLoaded = false;
-
 const Monaco = {
 
     _monaco: null,
-
-    Init: async function Init(id, interop, options) {
-
-        await LoadScript('_content/Biwen.Blazor.Components/monaco-editor/min/vs/loader.js');
+    Init: async function Init(id, interop, options, isLoaderjsLoaded) {
+        let isloaded = sessionStorage.getItem("isLoaderjsLoaded") === "yes";
+        if (!isloaded) {
+            await LoadScript('_content/Biwen.Blazor.Components/monaco-editor/min/vs/loader.js');
+            sessionStorage.setItem("isLoaderjsLoaded", "yes");
+        }
         require.config({ paths: { vs: './_content/Biwen.Blazor.Components/monaco-editor/min/vs' } });
 
         require(['vs/editor/editor.main'], function () {

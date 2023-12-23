@@ -16,11 +16,11 @@
     </FluentGridItem>
 
 
-    <FluentGridItem xs="12">
+@*     <FluentGridItem xs="12">
 
         <MarkdownEditor @ref="editor2" Content="@md" UploadImage="true" UploadImagePath="/upload"></MarkdownEditor>
         <FluentButton @onclick="async()=>{await GetContent2(); }" Appearance="Appearance.Accent">获取Content2</FluentButton>
-    </FluentGridItem>
+    </FluentGridItem> *@
 
 
 
@@ -43,7 +43,7 @@
     private string md = "#### Hello World";
 
     private MarkdownEditor editor = null!;
-    private MarkdownEditor editor2 = null!;
+    //private MarkdownEditor editor2 = null!;
     private CodeEditor codeEditor = null!;
 
 
@@ -60,11 +60,11 @@
         ToastService.ShowInfo(content!);
     }
 
-    private async Task GetContent2()
-    {
-        var content = await editor2.GetContent();
-        ToastService.ShowInfo(content!);
-    }
+    // private async Task GetContent2()
+    // {
+    //     var content = await editor2.GetContent();
+    //     ToastService.ShowInfo(content!);
+    // }
 
 
 }

@@ -63,7 +63,7 @@
             }
         }
 
-        public async Task<string> GetValue()
+        public async ValueTask<string> GetValue()
         {
             return await Interop.GetValue();
         }

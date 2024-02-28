@@ -3,7 +3,15 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "monaco-editor@0.45.0",
+      "library": "qrcode-generator@1.4.4",
+      "destination": "wwwroot/qrcode/",
+      "files": [
+        "qrcode.min.js"
+      ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "monaco-editor@0.46.0",
       "destination": "wwwroot/monaco-editor/",
       "files": [
         "min/vs/loader.js",
@@ -228,16 +236,8 @@
         "min/vs/language/json/jsonWorker.js",
         "min/vs/language/json/jsonWorker.min.js",
         "min/vs/language/typescript/tsMode.js",
-        "min/vs/language/typescript/tsMode.min.js",
         "min/vs/language/typescript/tsWorker.js",
         "min/vs/language/typescript/tsWorker.min.js"
-      ]
-    },
-    {
-      "library": "qrcode-generator@1.4.4",
-      "destination": "wwwroot/qrcode/",
-      "files": [
-        "qrcode.min.js"
       ]
     }
   ]

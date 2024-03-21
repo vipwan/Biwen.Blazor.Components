@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<PackageVersion>1.0.0-beta2</PackageVersion>
+		<PackageVersion>1.0.0-beta3</PackageVersion>
 		<PackageProjectUrl>https://github.com/vipwan/Biwen.Blazor.Components</PackageProjectUrl>
 		<Authors>万雅虎</Authors>
 		<RepositoryUrl>https://github.com/vipwan/Biwen.Blazor.Components</RepositoryUrl>

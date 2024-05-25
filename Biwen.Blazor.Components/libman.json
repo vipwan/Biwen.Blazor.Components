@@ -11,7 +11,7 @@
     },
     {
       "provider": "cdnjs",
-      "library": "monaco-editor@0.46.0",
+      "library": "monaco-editor@0.49.0",
       "destination": "wwwroot/monaco-editor/",
       "files": [
         "min/vs/loader.js",

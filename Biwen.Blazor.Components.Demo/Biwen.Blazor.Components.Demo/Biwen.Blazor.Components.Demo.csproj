@@ -8,10 +8,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Biwen.Blazor.Components.Demo.Client\Biwen.Blazor.Components.Demo.Shared.csproj" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.7" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.8.1" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.9.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="wwwroot\uploads\" />

@@ -56,7 +56,7 @@
 
     private async Task GetContent()
     {
-        var content = await editor.GetContent();
+        var content = await editor.GetContentAsync();
         ToastService.ShowInfo(content!);
     }
 

@@ -1,15 +1,7 @@
-using Biwen.Blazor.Components;
+ï»¿using Biwen.Blazor.Components.Demo.Components;
 using Biwen.Blazor.Components.Demo.Shared.Pages;
-using Biwen.Blazor.Components.Demo.Components;
-using Microsoft.FluentUI.AspNetCore.Components;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Net;
-using Microsoft.AspNetCore.Http.HttpResults;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Net.WebRequestMethods;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FluentUI.AspNetCore.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,13 +39,13 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 
-// ÉÏ´«
+// ä¸Šä¼ 
 app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollection files) =>
 {
-    //µ±Ç°Ã»ÓĞ·ÀÎ±±ê¼Ç,ĞèÒª×ÔĞĞ´¦Àí
-    //²»Ö§³ÖÅúÁ¿.Ö»Ö§³ÖÒ»´ÎÉÏ´«Ò»¸öÎÄ¼ş
-    //ĞèÒª×ÔĞĞ½â¾öÈ¨ÏŞºÍ°²È«ÎÊÌâ
-    //ÉÏ´«ÎÄ¼şÂß¼­:
+    //å½“å‰æ²¡æœ‰é˜²ä¼ªæ ‡è®°,éœ€è¦è‡ªè¡Œå¤„ç†
+    //ä¸æ”¯æŒæ‰¹é‡.åªæ”¯æŒä¸€æ¬¡ä¸Šä¼ ä¸€ä¸ªæ–‡ä»¶
+    //éœ€è¦è‡ªè¡Œè§£å†³æƒé™å’Œå®‰å…¨é—®é¢˜
+    //ä¸Šä¼ æ–‡ä»¶é€»è¾‘:
 
     //imageUploadEndpoint: The endpoint where the images data will be sent,
     //via an asynchronous POST request.The server is supposed to save this image, and return a JSON response.
@@ -74,7 +66,7 @@ app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollect
     var ext = Path.GetExtension(file.FileName);
     string fileName = $"{Guid.NewGuid()}{ext}";
 
-    #region Èç¹ûÎÄ¼ş¼Ğ²»´æÔÚ.´´½¨ÎÄ¼ş¼Ğ
+    #region å¦‚æœæ–‡ä»¶å¤¹ä¸å­˜åœ¨.åˆ›å»ºæ–‡ä»¶å¤¹
     var dir = Path.Combine(wwwroot, "uploads");
     if (!Directory.Exists(dir))
     {
@@ -82,7 +74,7 @@ app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollect
     }
     #endregion
 
-    //Èç¹ûĞèÒªÈÕÆÚÄ¿Â¼,Çë×ÔĞĞ´¦Àí
+    //å¦‚æœéœ€è¦æ—¥æœŸç›®å½•,è¯·è‡ªè¡Œå¤„ç†
     var filePath = Path.Combine(wwwroot, "uploads", fileName);
     using var stream = new FileStream(filePath, FileMode.CreateNew);
     file.CopyTo(stream);
@@ -91,7 +83,7 @@ app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollect
     {
         data = new
         {
-            //Çë×¢ÒâĞèÒªÊ¹ÓÃ¾ø¶ÔµØÖ·,Ô¶³ÌÂ·¾¶¸ñÊ½±ÈÈç:http://localhost:5000/uploads/xxx.png
+            //è¯·æ³¨æ„éœ€è¦ä½¿ç”¨ç»å¯¹åœ°å€,è¿œç¨‹è·¯å¾„æ ¼å¼æ¯”å¦‚:http://localhost:5000/uploads/xxx.png
             filePath = $"/uploads/{fileName}"
         }
     });

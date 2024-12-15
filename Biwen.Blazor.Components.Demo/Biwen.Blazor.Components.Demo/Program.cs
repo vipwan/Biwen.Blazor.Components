@@ -35,9 +35,11 @@ else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
 }
-app.UseStaticFiles();
-app.UseAntiforgery();
 
+//net 9.0 +
+app.MapStaticAssets();
+
+app.UseAntiforgery();
 
 // 上传
 app.MapPost("/upload", ([FromServices] IWebHostEnvironment env, IFormFileCollection files) =>

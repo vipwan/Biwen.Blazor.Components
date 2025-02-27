@@ -40,9 +40,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Biwen.AutoClassGen" Version="1.5.4" PrivateAssets="all" />
-		<PackageReference Include="Markdig" Version="0.39.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
+		<PackageReference Include="Biwen.AutoClassGen" Version="1.5.5" PrivateAssets="all" />
+		<PackageReference Include="Markdig" Version="0.40.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.2" />
 	</ItemGroup>
 
 </Project>

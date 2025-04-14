@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<PackageVersion>1.0.0-beta3</PackageVersion>
+		<PackageVersion>1.0.0-beta4</PackageVersion>
 		<PackageProjectUrl>https://github.com/vipwan/Biwen.Blazor.Components</PackageProjectUrl>
 		<Authors>万雅虎</Authors>
 		<RepositoryUrl>https://github.com/vipwan/Biwen.Blazor.Components</RepositoryUrl>
@@ -40,9 +40,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Biwen.AutoClassGen" Version="1.5.5" PrivateAssets="all" />
+		<PackageReference Include="Biwen.AutoClassGen" Version="1.7.0" PrivateAssets="all" />
 		<PackageReference Include="Markdig" Version="0.40.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Shared\" />
 	</ItemGroup>
 
 </Project>

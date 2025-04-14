@@ -1,0 +1,36 @@
+/* Monaco Editor Custom Styles */
+
+/* Import the main Monaco editor CSS */
+@import url('./min/vs/editor/editor.main.min.css');
+
+/* Custom styles for the Monaco editor container */
+.monaco-editor {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Loading indicator styles */
+.editor-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background-color: #f5f5f5;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Custom scrollbar styles */
+.monaco-editor .monaco-scrollable-element .scrollbar {
+    background-color: rgba(100, 100, 100, 0.1);
+}
+
+.monaco-editor .monaco-scrollable-element .scrollbar .slider {
+    background-color: rgba(100, 100, 100, 0.4);
+}
+
+/* Ensure the editor takes full height of its container */
+.monaco-editor, .monaco-editor .overflow-guard {
+    height: 100%;
+}

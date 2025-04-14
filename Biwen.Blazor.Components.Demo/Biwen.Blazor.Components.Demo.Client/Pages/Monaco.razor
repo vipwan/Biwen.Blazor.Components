@@ -1,0 +1,494 @@
+﻿@page "/monaco"
+@rendermode InteractiveAuto
+@using Biwen.Blazor.Components
+
+<PageTitle>Monaco编辑器</PageTitle>
+
+<FluentToastProvider MaxToastCount="10" />
+<FluentDialogProvider />
+<FluentTooltipProvider />
+
+<FluentGrid>
+    <FluentGridItem xs="12">
+        <h1>Monaco 代码编辑器</h1>
+        <p>
+            Monaco编辑器是VS Code使用的代码编辑器引擎，提供强大的代码编辑功能。
+        </p>
+
+        <FluentCard>
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
+                <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
+                    <FluentSelect Label="语言" Value="@_selectedLanguage" ValueChanged="async (val) => { _selectedLanguage = val; await OnLanguageChanged(val); }" Width="200px" TOption="string" Items="@_languages">
+                        <OptionTemplate Context="ctx">
+                            @ctx
+                        </OptionTemplate>
+                    </FluentSelect>
+
+                    <FluentSelect Label="主题" Value="@_selectedTheme" ValueChanged="async (val) => { _selectedTheme = val; await OnThemeChanged(val); }" Width="200px" TOption="string" Items="@_themes">
+                        <OptionTemplate Context="ctx">
+                            @ctx
+                        </OptionTemplate>
+                    </FluentSelect>
+
+                    <FluentCheckbox Value="@_showMinimap" ValueChanged="async (val) => { _showMinimap = val; await OnMinimapChanged(val); }" Label="显示小地图" />
+                    <FluentCheckbox Value="@_showLineNumbers" ValueChanged="async (val) => { _showLineNumbers = val; await OnLineNumbersChanged(val); }" Label="显示行号" />
+                    <FluentCheckbox Value="@_readOnly" ValueChanged="async (val) => { _readOnly = val; await OnReadOnlyChanged(val); }" Label="只读模式" />
+                </FluentStack>
+
+                <div style="margin: 10px 0;width:100%">
+                    <MonacoEditor @ref="_editor"
+                                  Language="@_selectedLanguage"
+                                  Theme="@_selectedTheme"
+                                  Value="@_code"
+                                  ValueChanged="(val) => { _code = val; }"
+                                  ReadOnly="@_readOnly"
+                                  ShowMinimap="@_showMinimap"
+                                  ShowLineNumbers="@_showLineNumbers"
+                                  Style="width: 100%; height: 400px; border: 1px solid #ccc; border-radius: 4px;" />
+                </div>
+
+                <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
+                    <FluentButton Appearance="Appearance.Accent" OnClick="FormatCode">格式化代码</FluentButton>
+                    <FluentButton OnClick="ResetToDefaultCode">重置代码</FluentButton>
+                    <FluentButton OnClick="ToggleReadOnly">@(_readOnly ? "启用编辑" : "设为只读")</FluentButton>
+                    <FluentButton OnClick="GetCurrentValue">获取当前内容</FluentButton>
+                </FluentStack>
+                @if (!string.IsNullOrEmpty(_message))
+                {
+                    <div class="callout @_messageType">
+                        <h3>操作提示</h3>
+                        <p>@_message</p>
+                    </div>
+                }
+            </FluentStack>
+        </FluentCard>
+    </FluentGridItem>
+</FluentGrid>
+
+@code {
+    private dynamic? _editor;
+    private string _code = GetDefaultCode("csharp"); private string _selectedLanguage = "csharp";
+    private string _previousLanguage = "csharp"; // 添加字段跟踪上一次选择的语言
+    private string _selectedTheme = "vs";
+    private bool _showMinimap = false;
+    private bool _showLineNumbers = true;
+    private bool _readOnly = false;
+    private string _message = string.Empty;
+    private string _messageType = "success"; // 使用字符串代替枚举: success, warning, info, danger
+
+    private List<string> _languages = new List<string>
+    {
+        "csharp",
+        "javascript",
+        "typescript",
+        "html",
+        "css",
+        "json",
+        "sql",
+        "xml",
+        "yaml",
+        "markdown",
+        "python",
+        "java"
+    };
+
+    private List<string> _themes = new List<string>
+    {
+        "vs",
+        "vs-dark",
+        "hc-black",
+        "hc-light"
+    };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // 等待编辑器加载完成
+            await Task.Delay(1000); // 等待编辑器加载
+            await HandleEditorInit();
+        }
+        else
+        {
+            // 在非首次渲染时，检查编辑器是否需要重新初始化
+            try
+            {
+                if (_editor != null)
+                {
+                    // 先检查EditorLoaded属性
+                    bool isLoaded = false;
+                    try
+                    {
+                        isLoaded = _editor.EditorLoaded;
+                    }
+                    catch
+                    {
+                        // 如果访问EditorLoaded属性失败，则认为编辑器未加载
+                        isLoaded = false;
+                    }
+
+                    if (isLoaded)
+                    {
+                        // 确保语言和主题设置正确
+                        await _editor.UpdateOptionsAsync(new {
+                            language = _selectedLanguage,
+                            theme = _selectedTheme,
+                            minimap = new { enabled = _showMinimap },
+                            lineNumbers = _showLineNumbers ? "on" : "off",
+                            readOnly = _readOnly
+                        });
+
+                        // 强制重新设置内容，确保语法高亮正确应用
+                        var currentValue = await _editor.GetValueAsync();
+                        await _editor.SetValueAsync(currentValue);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 记录异常但不中断渲染
+                Console.Error.WriteLine($"非首次渲染时更新编辑器选项失败: {ex.Message}");
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    private async Task HandleEditorInit()
+    {
+        if (_editor != null)
+        {
+            try
+            {
+                // 等待编辑器加载完成
+                for (int i = 0; i < 20; i++) // 增加尝试次数到20次，每次间隔300ms
+                {
+                    // 尝试访问 EditorLoaded 属性
+                    try
+                    {
+                        if (_editor.EditorLoaded)
+                        {
+                            // 编辑器初始化完成后的操作
+                            await _editor.AddActionAsync("format", "格式化代码", "shift+alt+f", new Func<Task>(FormatCode));
+
+                            // 初始化编辑器选项
+                            await _editor.UpdateOptionsAsync(new {
+                                language = _selectedLanguage,
+                                theme = _selectedTheme,
+                                minimap = new { enabled = _showMinimap },
+                                lineNumbers = _showLineNumbers ? "on" : "off",
+                                readOnly = _readOnly
+                            });
+
+                            // 强制重新设置值，确保语法高亮正确应用
+                            var currentValue = await _editor.GetValueAsync();
+                            await _editor.SetValueAsync(currentValue);
+
+                            ShowMessage("编辑器初始化完成，可以使用 Shift+Alt+F 格式化代码", "success");
+                            return;
+                        }
+                    }
+                    catch (Exception initEx)
+                    {
+                        // 记录异常但继续尝试
+                        Console.Error.WriteLine($"编辑器初始化尝试失败 ({i+1}/20): {initEx.Message}");
+                    }
+
+                    await Task.Delay(300); // 增加等待时间
+                }
+                ShowMessage("编辑器初始化超时，请尝试刷新页面", "warning");
+            }
+            catch (Exception ex)
+            {
+                ShowMessage($"编辑器初始化失败: {ex.Message}", "warning");
+            }
+        }
+    }
+    private async Task FormatCode()
+    {
+        // 在实际应用中可以调用服务端格式化代码
+        // 这里仅演示如何调用编辑器方法
+        if (_editor != null)
+        {
+            if (_selectedLanguage == "json")
+            {
+                try
+                {
+                    // 使用编辑器内置的格式化功能
+                    await _editor.FormatDocumentAsync();
+                    ShowMessage("JSON格式化成功", "success");
+                }
+                catch (Exception ex)
+                {
+                    ShowMessage($"JSON格式化失败: {ex.Message}", "warning");
+                }
+            }
+            else
+            {
+                // 尝试使用编辑器内置的格式化功能
+                await _editor.FormatDocumentAsync();
+                ShowMessage("代码格式化完成", "success");
+            }
+        }
+    }
+    private void ShowMessage(string message, string type = "info")
+    {
+        _message = message;
+        _messageType = type;
+        StateHasChanged();
+
+        // 3秒后自动清除消息
+        Task.Delay(3000).ContinueWith(_ =>
+        {
+            _message = string.Empty;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private static string GetDefaultCode(string language)
+    {
+        switch (language)
+        {
+            case "csharp":
+                return @"using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Demo
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine(""Hello Monaco Editor!"");
+
+            // 使用LINQ进行一些操作
+            var numbers = new List<int> { 1, 2, 3, 4, 5, 6 };
+            var evenNumbers = numbers.Where(x => x % 2 == 0).ToList();
+
+            foreach (var num in evenNumbers)
+            {
+                Console.WriteLine(num);
+            }
+        }
+    }
+}";
+            case "javascript":
+                return @"// JavaScript示例代码
+function greet(name) {
+    return `Hello, ${name}!`;
+}
+
+// 使用箭头函数
+const add = (a, b) => a + b;
+
+// 使用数组方法
+const numbers = [1, 2, 3, 4, 5, 6];
+const evenNumbers = numbers.filter(num => num % 2 === 0);
+
+console.log(greet('Monaco'));
+console.log(`求和: ${add(10, 20)}`);
+console.log(`偶数: ${evenNumbers}`);";
+            case "json":
+                return @"{
+    ""name"": ""Monaco Editor"",
+    ""version"": ""1.0.0"",
+    ""description"": ""A powerful code editor"",
+    ""features"": [
+        ""Syntax highlighting"",
+        ""Intellisense"",
+        ""Code folding"",
+        ""Multiple language support""
+    ],
+    ""settings"": {
+        ""theme"": ""vs-dark"",
+        ""fontSize"": 14,
+        ""lineNumbers"": true
+    }
+}";
+            default:
+                return $"// {language} 代码示例";
+        }
+    }
+
+    private async Task ResetToDefaultCode()
+    {
+        _code = GetDefaultCode(_selectedLanguage);
+        if (_editor != null)
+        {
+            await _editor.SetValueAsync(_code);
+        }
+        ShowMessage("代码已重置为默认示例", "success");
+    }
+
+    private async Task GetCurrentValue()
+    {
+        if (_editor != null)
+        {
+            var value = await _editor.GetValueAsync();
+            ShowMessage($"当前编辑器内容长度: {value?.Length} 字符", "success");
+        }
+    }
+
+    private async Task ToggleReadOnly()
+    {
+        _readOnly = !_readOnly;
+        await OnReadOnlyChanged(_readOnly);
+    }
+    // 语言变化事件处理
+    private async Task OnLanguageChanged(string newLanguage)
+    {
+        try
+        {
+            if (_editor != null)
+            {
+                try
+                {
+                    // 先更新语言选项
+                    await _editor.UpdateOptionsAsync(new { language = newLanguage });
+
+                    // 获取当前内容
+                    var currentValue = await _editor.GetValueAsync();
+
+                    // 检查当前内容是否为旧语言的默认代码
+                    if (string.IsNullOrEmpty(currentValue) || currentValue == GetDefaultCode(_previousLanguage))
+                    {
+                        // 如果是默认代码，则更新为新语言的默认代码
+                        _code = GetDefaultCode(newLanguage);
+                        await _editor.SetValueAsync(_code);
+                    }
+                    else
+                    {
+                        // 即使不是默认代码，也重新设置一次内容，强制刷新语法高亮
+                        await _editor.SetValueAsync(currentValue);
+                    }
+
+                    // 再次确认语言设置
+                    await Task.Delay(100); // 等待一下确保前面的操作完成
+                    await _editor.UpdateOptionsAsync(new { language = newLanguage });
+                }
+                catch (Exception langEx)
+                {
+                    // 记录异常，但不中断操作
+                    Console.Error.WriteLine($"切换语言时发生异常: {langEx.Message}");
+                }
+
+                // 更新前一次语言记录
+                _previousLanguage = newLanguage;
+                ShowMessage($"已切换到{newLanguage}语言", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"切换语言失败: {ex.Message}", "warning");
+        }
+    }
+
+    // 主题变化事件处理
+    private async Task OnThemeChanged(string newTheme)
+    {
+        try
+        {
+            if (_editor != null)
+            {
+                try
+                {
+                    await _editor.UpdateOptionsAsync(new { theme = newTheme });
+                }
+                catch
+                {
+                    // 忽略异常，可能编辑器还没有加载完成
+                }
+                ShowMessage($"已切换到{newTheme}主题", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"切换主题失败: {ex.Message}", "warning");
+        }
+    }
+
+    // 小地图显示状态变化事件处理
+    private async Task OnMinimapChanged(bool showMinimap)
+    {
+        try
+        {
+            if (_editor != null)
+            {
+                try
+                {
+                    // 直接传递布尔值，JS会处理成对象
+                    await _editor.UpdateOptionsAsync(new { minimap = showMinimap });
+                }
+                catch
+                {
+                    // 忽略异常，可能编辑器还没有加载完成
+                }
+                ShowMessage(showMinimap ? "已显示小地图" : "已隐藏小地图", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"切换小地图显示状态失败: {ex.Message}", "warning");
+        }
+    }
+
+    // 行号显示状态变化事件处理
+    private async Task OnLineNumbersChanged(bool showLineNumbers)
+    {
+        try
+        {
+            if (_editor != null)
+            {
+                try
+                {
+                    // 直接传递布尔值，JS会处理成字符串
+                    await _editor.UpdateOptionsAsync(new { lineNumbers = showLineNumbers });
+                }
+                catch
+                {
+                    // 忽略异常，可能编辑器还没有加载完成
+                }
+                ShowMessage(showLineNumbers ? "已显示行号" : "已隐藏行号", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"切换行号显示状态失败: {ex.Message}", "warning");
+        }
+    }
+
+    // 只读状态变化事件处理
+    private async Task OnReadOnlyChanged(bool readOnly)
+    {
+        try
+        {
+            if (_editor != null)
+            {
+                try
+                {
+                    await _editor.UpdateOptionsAsync(new { readOnly = readOnly });
+                }
+                catch
+                {
+                    // 忽略异常，可能编辑器还没有加载完成
+                }
+                ShowMessage(readOnly ? "已切换到只读模式" : "已切换到编辑模式", "success");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"切换只读状态失败: {ex.Message}", "warning");
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // 保留这个方法以处理其他参数变化
+        await base.OnParametersSetAsync();
+    }
+}

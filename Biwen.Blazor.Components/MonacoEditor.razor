@@ -1,0 +1,392 @@
+﻿@rendermode InteractiveAuto
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+<HeadContent>
+
+    <link rel="stylesheet" type="text/css" href="_content/Biwen.Blazor.Components/monaco-editor/monaco.css" />
+    <script>
+        // 预先配置Monaco环境，确保Web Worker正确加载
+        window.MonacoEnvironment = {
+            getWorkerUrl: function(_workerId, _label) {
+                return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+                    self.MonacoEnvironment = {
+                        baseUrl: '_content/Biwen.Blazor.Components/monaco-editor/min/'
+                    };
+                    importScripts('_content/Biwen.Blazor.Components/monaco-editor/min/vs/base/worker/workerMain.js');
+                `)}`;
+            }
+        };
+    </script>
+</HeadContent>
+
+<div @ref="EditorContainer" id="@Id" class="monaco-editor" style="@Style">
+    @if (ShowLoadingIndicator && !EditorLoaded)
+    {
+        <div class="editor-loading">
+            <span>加载编辑器中...</span>
+        </div>
+    }
+</div>
+
+@code {
+    private ElementReference EditorContainer;
+    private IJSObjectReference? _module;
+    private bool _editorLoaded;
+    private DotNetObjectReference<MonacoEditor>? _dotNetRef;
+
+    /// <summary>
+    /// 编辑器唯一标识
+    /// </summary>
+    [Parameter]
+    public string Id { get; set; } = $"monaco-editor-{Guid.NewGuid():N}";
+
+    /// <summary>
+    /// 编辑器样式
+    /// </summary>
+    [Parameter]
+    public string Style { get; set; } = "width: 100%; height: 500px; border: 1px solid #ccc;";
+
+    /// <summary>
+    /// 编辑器内容
+    /// </summary>
+    [Parameter]
+    public string? Value { get; set; }
+
+    /// <summary>
+    /// 编辑器内容变化事件
+    /// </summary>
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    /// <summary>
+    /// 编辑器语言
+    /// </summary>
+    [Parameter]
+    public string Language { get; set; } = "csharp";
+
+    /// <summary>
+    /// 编辑器主题
+    /// </summary>
+    [Parameter]
+    public string Theme { get; set; } = "vs";
+
+    /// <summary>
+    /// 是否只读
+    /// </summary>
+    [Parameter]
+    public bool ReadOnly { get; set; }
+
+    /// <summary>
+    /// 是否显示加载指示器
+    /// </summary>
+    [Parameter]
+    public bool ShowLoadingIndicator { get; set; } = true;
+
+    /// <summary>
+    /// 是否显示小地图
+    /// </summary>
+    [Parameter]
+    public bool ShowMinimap { get; set; }
+
+    /// <summary>
+    /// 是否显示行号
+    /// </summary>
+    [Parameter]
+    public bool ShowLineNumbers { get; set; } = true;
+
+    /// <summary>
+    /// 字体大小
+    /// </summary>
+    [Parameter]
+    public int FontSize { get; set; } = 14;
+
+    /// <summary>
+    /// 编辑器是否已加载
+    /// </summary>
+    public bool EditorLoaded => _editorLoaded;
+
+    /// <summary>
+    /// 获取编辑器当前内容
+    /// </summary>
+    /// <returns>编辑器内容</returns>
+    public async Task<string> GetValueAsync()
+    {
+        if (_disposed || _module == null || !_editorLoaded)
+            return Value ?? string.Empty;
+
+        try
+        {
+            return await _module.InvokeAsync<string>("MonacoEditor.getValue", Id);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"获取编辑器内容失败: {ex}");
+            return Value ?? string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// 设置编辑器内容
+    /// </summary>
+    /// <param name="value">要设置的内容</param>
+    public async Task SetValueAsync(string? value)
+    {
+        if (_disposed || _module == null || !_editorLoaded)
+            return;
+
+        try
+        {
+            await _module.InvokeVoidAsync("MonacoEditor.setValue", Id, value);
+            Value = value;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"设置编辑器内容失败: {ex}");
+        }
+    }
+
+    /// <summary>
+    /// 更新编辑器选项
+    /// </summary>
+    /// <param name="options">选项对象</param>
+    public async Task UpdateOptionsAsync(object options)
+    {
+        if (_disposed || _module == null || !_editorLoaded)
+            return;
+
+        try
+        {
+            await _module.InvokeVoidAsync("MonacoEditor.updateOptions", Id, options);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"更新编辑器选项失败: {ex}");
+        }
+    }
+
+    /// <summary>
+    /// 格式化当前文档
+    /// </summary>
+    public async Task FormatDocumentAsync()
+    {
+        if (_disposed || _module == null || !_editorLoaded)
+            return;
+
+        try
+        {
+            await _module.InvokeVoidAsync("MonacoEditor.formatDocument", Id);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"格式化文档失败: {ex}");
+        }
+    }
+
+    /// <summary>
+    /// 添加自定义操作
+    /// </summary>
+    /// <param name="id">操作ID</param>
+    /// <param name="label">操作标签</param>
+    /// <param name="keybinding">键绑定，例如 "shift+alt+f"</param>
+    /// <param name="callback">回调函数</param>
+    public async Task AddActionAsync(string id, string label, string keybinding, Func<Task> callback)
+    {
+        if (_disposed || _module == null || !_editorLoaded)
+            return;
+
+        try
+        {
+            // 存储回调函数以便在JS调用时执行
+            _actionCallbacks[id] = callback;
+            await _module.InvokeVoidAsync("MonacoEditor.addAction", Id, id, label, keybinding, _dotNetRef);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"添加编辑器操作失败: {ex}");
+        }
+    }
+
+    // 存储操作回调函数的字典
+    private readonly Dictionary<string, Func<Task>> _actionCallbacks = new();
+
+    /// <summary>
+    /// 操作执行回调
+    /// </summary>
+    [JSInvokable]
+    public async Task OnActionExecuted(string actionId)
+    {
+        if (_actionCallbacks.TryGetValue(actionId, out var callback))
+        {
+            await callback();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                _dotNetRef = DotNetObjectReference.Create(this);
+                _module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Biwen.Blazor.Components/modules-monaco.js");
+
+                var options = new
+                {
+                    value = Value,
+                    language = Language,
+                    theme = Theme,
+                    readOnly = ReadOnly,
+                    minimap = new { enabled = ShowMinimap },
+                    lineNumbers = ShowLineNumbers ? "on" : "off",
+                    fontSize = FontSize
+                };
+
+                // 调试信息
+                Console.WriteLine($"Monaco Editor Options: minimap={ShowMinimap}, lineNumbers={ShowLineNumbers}");
+
+                await _module.InvokeVoidAsync("MonacoEditor.init", Id, options, _dotNetRef);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Monaco编辑器初始化失败: {ex}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 编辑器加载完成回调
+    /// </summary>
+    [JSInvokable]
+    public void OnEditorLoaded()
+    {
+        _editorLoaded = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// 编辑器内容变化回调
+    /// </summary>
+    [JSInvokable]
+    public async Task OnValueChanged(string value)
+    {
+        if (Value != value)
+        {
+            Value = value;
+            if (ValueChanged.HasDelegate)
+            {
+                await ValueChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 编辑器错误回调
+    /// </summary>
+    [JSInvokable]
+    public void OnEditorError(string errorMessage)
+    {
+        Console.Error.WriteLine($"Monaco编辑器错误: {errorMessage}");
+        // 这里可以添加错误处理逻辑，比如显示错误消息给用户
+    }
+
+    private bool _disposed = false;    public async ValueTask DisposeAsync()
+    {
+        if (_disposed)
+            return;
+
+        try
+        {
+            _disposed = true;
+
+            if (_module != null)
+            {
+                try
+                {
+                    // 先检查JS运行时是否仍然连接，避免在断开连接时调用JS方法
+                    if (await IsJSRuntimeConnectedAsync())
+                    {
+                        await _module.InvokeVoidAsync("MonacoEditor.dispose", Id);
+                    }
+                }
+                catch (JSDisconnectedException)
+                {
+                    // 忽略JS断开连接异常，这是预期中可能发生的情况
+                    Console.WriteLine("JS连接已断开，无法调用Monaco编辑器销毁方法");
+                }
+                catch (Exception disposeEx)
+                {
+                    Console.Error.WriteLine($"Monaco编辑器实例销毁失败: {disposeEx}");
+                }
+
+                try
+                {
+                    // 同样检查JS运行时连接状态
+                    if (await IsJSRuntimeConnectedAsync())
+                    {
+                        await _module.DisposeAsync();
+                    }
+                }
+                catch (JSDisconnectedException)
+                {
+                    // 忽略JS断开连接异常
+                    Console.WriteLine("JS连接已断开，无法销毁JS模块");
+                }
+                catch (Exception moduleDisposeEx)
+                {
+                    Console.Error.WriteLine($"Monaco编辑器模块销毁失败: {moduleDisposeEx}");
+                }
+
+                _module = null;
+            }
+
+            if (_dotNetRef != null)
+            {
+                _dotNetRef.Dispose();
+                _dotNetRef = null;
+            }
+
+            // 清空回调字典
+            _actionCallbacks.Clear();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Monaco编辑器销毁失败: {ex}");
+        }
+    }
+    
+    /// <summary>
+    /// 检查JS运行时是否仍然连接
+    /// </summary>
+    private async Task<bool> IsJSRuntimeConnectedAsync()
+    {
+        try
+        {
+            // 通过尝试执行一个简单的JS操作来检查连接状态
+            // 如果是进程内运行时，直接返回true
+            if (JSRuntime is IJSInProcessRuntime)
+            {
+                return true;
+            }
+            
+            // 使用超时机制避免长时间等待
+            using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+            await JSRuntime.InvokeAsync<bool>("eval", cts.Token, "true");
+            return true;
+        }
+        catch (JSDisconnectedException)
+        {
+            return false;
+        }
+        catch (TaskCanceledException)
+        {
+            // 操作超时也视为断开连接
+            return false;
+        }
+        catch
+        {
+            // 其他异常也视为断开连接
+            return false;
+        }
+    }
+}

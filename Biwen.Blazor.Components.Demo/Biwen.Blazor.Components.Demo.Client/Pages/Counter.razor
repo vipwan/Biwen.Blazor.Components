@@ -35,12 +35,6 @@ global using Microsoft.JSInterop;
 
     </FluentGridItem>
 
-    <FluentGridItem xs="12">
-
-        <MarkdownEditor @ref="editor" Content="@md" UploadImage="true" UploadImagePath="/upload"></MarkdownEditor>
-        <FluentButton @onclick="async()=>{await GetContent(); }" Appearance="Appearance.Accent">获取Content</FluentButton>
-
-    </FluentGridItem>
 
 
 </FluentGrid>
@@ -58,11 +52,4 @@ global using Microsoft.JSInterop;
 
     private string md = "#### Hello World";
 
-    private MarkdownEditor editor = null!;
-
-    private async Task GetContent()
-    {
-        var content = await editor.GetContentAsync();
-        ToastService.ShowInfo(content!);
-    }
 }
